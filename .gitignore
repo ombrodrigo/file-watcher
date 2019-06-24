@@ -1,0 +1,8 @@
+.classpath
+.project
+.settings
+.vscode
+.gradle
+bin
+build
+src/test/java/com/ombrodrigo/fileWatcher/data/out/*.done.*

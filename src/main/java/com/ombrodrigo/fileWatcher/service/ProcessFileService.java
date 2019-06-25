@@ -1,61 +1,34 @@
 package com.ombrodrigo.fileWatcher.service;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.stream.Stream;
 
 import com.ombrodrigo.fileWatcher.service.ParseService;
+import com.ombrodrigo.fileWatcher.service.ResumeFileService;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class ProcessFileService {
 
     private ParseService parseService;
-    private String filesPath;
+    private ResumeFileService resumeFileService;
 
-    public ProcessFileService (ParseService parseService, String filesPath) {
+    public ProcessFileService (ParseService parseService, ResumeFileService resumeFileService) {
         this.parseService = parseService;
-        this.filesPath = filesPath;
+        this.resumeFileService = resumeFileService;
     }
-    
-    public void process()  {
+
+    public void process(Path file)  {
         try {
-            this.readFiles();
-            this.writeResult();
+            parseService.parser(Files.readAllLines(file));
+            resumeFileService.resume(
+                file,
+                parseService.getSellers(),
+                parseService.getCustomers(),
+                parseService.getSales()
+            );
         } catch (Exception e) {
-        }
-    }
-
-    public String pathIn() {
-        return this.filesPath + "/in/";
-    }
-
-    public String pathOut() {
-        return this.filesPath + "/out/file.done.data";
-    }
-
-    private void readFiles() throws IOException  {
-        try (Stream<Path> paths = Files.walk(Paths.get(this.filesPath))) {
-            paths
-                .filter(file -> file.toString().endsWith(".dat"))
-                .forEach(file -> {
-                    try {
-                        parseService.parser(Files.readAllLines(file));
-                    }  catch (Exception e) {
-                    }
-                });
-        }
-    }
-
-    private void writeResult() throws IOException {
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(this.pathOut()))) {
-
-            String result = "Customers: " + parseService.getCustomers().size() + "\n" +
-                            "Sellers: " +  parseService.getSellers().size();
-            
-            bufferedWriter.write(result);
         }
     }
 }

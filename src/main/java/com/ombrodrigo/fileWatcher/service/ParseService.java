@@ -11,11 +11,14 @@ import com.ombrodrigo.fileWatcher.parser.CustomerParser;
 import com.ombrodrigo.fileWatcher.parser.SaleParser;
 import com.ombrodrigo.fileWatcher.parser.SellerParser;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class ParseService {
 
-    private List<Seller> sellers = new ArrayList<>();
-    private List<Customer> customers = new ArrayList<>();
-    private List<Sale> sales = new ArrayList<>();
+    private List<Seller> sellers;
+    private List<Customer> customers;
+    private List<Sale> sales;
 
     private SellerParser sellerParser;
     private CustomerParser customerParser;
@@ -28,6 +31,8 @@ public class ParseService {
     }    
 
     public void parser(List<String> lines) {
+        this.initializeLists();
+
         lines.stream()
             .map(this::parseLine)
             .collect(Collectors.toList());
@@ -43,6 +48,12 @@ public class ParseService {
 
     public List<Sale> getSales() {
         return this.sales;
+    }
+
+    private void initializeLists() {
+        this.sellers = new ArrayList<>();
+        this.customers = new ArrayList<>();
+        this.sales = new ArrayList<>();
     }
 
     private String parseLine(String line) {

@@ -5,6 +5,9 @@ import java.util.regex.Pattern;
 
 import com.ombrodrigo.fileWatcher.domain.Customer;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class CustomerParser {
 
     private final String EXTRACTION_PATTERN = "(002)ç([0-9]{16})ç([\\s\\S]+)ç([\\s\\S]+)";

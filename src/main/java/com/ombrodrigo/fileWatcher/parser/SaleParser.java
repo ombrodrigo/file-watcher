@@ -7,6 +7,9 @@ import java.util.regex.Pattern;
 import com.ombrodrigo.fileWatcher.domain.Sale;
 import com.ombrodrigo.fileWatcher.domain.SaleItem;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class SaleParser {
 
     private final String EXTRACTION_PATTERN = "(003)ç([0-9]{2})ç(\\[.*\\]+)ç([\\s\\S]+)";
